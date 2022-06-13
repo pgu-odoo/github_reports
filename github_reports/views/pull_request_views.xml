@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="pr_form_view" model="ir.ui.view">
+            <field name="name">pull.request.form</field>
+            <field name="model">pull.request</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="fetch_comments" string="Fetch Comments" type="object"/>
+                        <button name="fetch_commits" string="Fetch Commits" type="object"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="title" class="o_text_overflow" placeholder="Title"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="pr_number" string="PR Number"/>
+                                <field name="author"/>
+                                <field name="team"/>
+                            </group>
+                            <group>
+                                <field name="pr_create_date" string="Create Date"/>
+                                <field name="closed_date" attrs="{'invisible': [('state', '!=', 'closed')]}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="PR Message">
+                                <field name="body"/>
+                            </page>
+                            <page string="PR Comment">
+                                <field name="comments">
+                                    <tree edit="0" create="0">
+                                        <field name="body"/>
+                                        <field name="contributor"/>
+                                        <field name="pr" string="PR Number" optional="hide"/> 
+                                        <field name="create_date" optional="hide"/>
+                                        <field name="updated_date" optional="hide"/>
+                                   </tree>
+                                </field>
+                            </page>
+                            <page string="PR Commits">
+                                <field name="commits">
+                                    <tree edit="0" create="0">
+                                        <field name="pr" string="PR"/>
+                                        <field name="message"/>
+                                        <field name="contributor" optional="hide"/>
+                                        <field name="author" optional="hide"/>
+                                        <field name="git_id" optional="hide"/>
+                                        <field name="html_url" optional="hide"/>
+                                        <field name="author_date" optional="hide"/>
+                                        <field name="commit_date" optional="hide"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+ 
+        <record id="github_issues_tree_view" model="ir.ui.view">
+            <field name="name">Pull Request</field>
+            <field name="model">pull.request</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="title"/>
+                    <field name="pr_number" string="PR Number"/>
+                    <field name="author"/>
+                    <field name="state"/>
+                    <field name="pr_create_date" string="Create Date"/>
+                    <field name="closed_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="github_issues_search_view" model="ir.ui.view">
+            <field name="name">PR Search View</field>
+            <field name="model">pull.request</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="author"/>
+                    <field name="pr_number"/>
+                    <field name="title"/>
+                    <field name="team"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Team" name="group_by_team" context="{'group_by': 'team'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="pr_comments_form_view" model="ir.ui.view">
+            <field name="name">pr.comment.form</field>
+            <field name="model">pr.comment</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="pr" class="o_text_overflow" placeholder="PR Number"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="contributor"/>
+                            </group>
+                            <group>
+                                <field name="create_date"/>
+                                <field name="updated_date"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Comment Message">
+                                <field name="body"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="github_pr_comment_tree_view" model="ir.ui.view">
+            <field name="name">Pull Request Comment</field>
+            <field name="model">pr.comment</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="pr" string="PR"/>
+                    <field name="contributor"/>
+                    <field name="git_id"/>
+                    <field name="created_date"/>
+                    <field name="updated_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="github_pr_commit_tree_view" model="ir.ui.view">
+            <field name="name">Pull Request Commit</field>
+            <field name="model">pr.commit</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="pr" string="PR"/>
+                    <field name="contributor"/>
+                    <field name="author"/>
+                    <field name="git_id"/>
+                    <field name="html_url" string="URL"/>
+                    <field name="author_date"/>
+                    <field name="commit_date"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="github_pr_commit_search_view" model="ir.ui.view">
+            <field name="name">PR Commit Search View</field>
+            <field name="model">pr.commit</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="pr" string="PR"/>
+                    <field name="contributor"/>
+                    <field name="author"/>
+                    <field name="git_id"/>
+                    <field name="html_url" string="URL"/>
+                    <field name="author_date"/>
+                    <field name="commit_date"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Team" name="group_by_team" context="{'group_by': 'pr'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="pr_commits_form_view" model="ir.ui.view">
+            <field name="name">pr.commit.form</field>
+            <field name="model">pr.commit</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="pr" class="o_text_overflow" placeholder="PR Number"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="contributor"/>
+                                <field name="commit_date"/>
+                                <field name="html_url" readonly="1" widget="url" placeholder="Commit" string="URL"/>
+                            </group>
+                            <group>
+                                <field name="author"/>
+                                <field name="author_date"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Message">
+                                <field name="message"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>
