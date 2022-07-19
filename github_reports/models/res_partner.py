@@ -37,12 +37,5 @@ class ResPartner(models.Model):
         for p in self:
             p.pr_count = len(p.pull_requests)
 
-    def create(self, vals):
-        if not vals[0].get('email'):
-            vals[0]['email'] = vals[0].get('name').lower() + "@odoo.com"
-        if not vals[0].get('github_user'):
-            vals[0]['github_user'] = vals[0].get('name').lower() + "-odoo"
-        return super(ResPartner, self).create(vals)
-
     def cron_fetch(self):
         self.search([('github_id','!=', False),('fetch_issues','=', True)]).fetch_pr()

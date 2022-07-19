@@ -20,7 +20,9 @@
                         <group>
                             <group>
                                 <field name="pr_number" string="PR Number"/>
-                                <field name="author"/>
+                                <field name="html_url" readonly="1" widget="url"/>
+                                <field name="author" attrs="{'invisible': [('author', '=', False)]}"/>
+                                <field name="author_name" attrs="{'invisible': [('author', '!=', False)]}"/>
                                 <field name="team"/>
                             </group>
                             <group>
@@ -35,8 +37,9 @@
                             <page string="PR Comment">
                                 <field name="comments">
                                     <tree edit="0" create="0">
-                                        <field name="body"/>
-                                        <field name="contributor"/>
+                                        <field name="body" string="Message"/>
+                                        <field name="contributor" attrs="{'invisible': [('contributor', '=', False)]}" optional="hide"/>
+                                        <field name="contributor_name" attrs="{'invisible': [('contributor', '!=', False)]}" optional="hide"/>
                                         <field name="pr" string="PR Number" optional="hide"/> 
                                         <field name="create_date" optional="hide"/>
                                         <field name="updated_date" optional="hide"/>
@@ -130,10 +133,11 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="pr" string="PR"/>
-                    <field name="contributor"/>
-                    <field name="git_id"/>
-                    <field name="created_date"/>
-                    <field name="updated_date"/>
+                    <field name="body" string="Message"/>
+                    <field name="contributor" optional="hide"/>
+                    <field name="git_id" optional="hide"/>
+                    <field name="created_date" optional="hide"/>
+                    <field name="updated_date" optional="hide"/>
                 </tree>
             </field>
         </record>
@@ -144,12 +148,12 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="pr" string="PR"/>
-                    <field name="contributor"/>
-                    <field name="author"/>
-                    <field name="git_id"/>
-                    <field name="html_url" string="URL"/>
-                    <field name="author_date"/>
-                    <field name="commit_date"/>
+                    <field name="message"/>
+                    <field name="contributor" optional="hide"/>
+                    <field name="author" optional="hide"/>
+                    <field name="git_id" optional="hide"/>
+                    <field name="author_date" optional="hide"/>
+                    <field name="commit_date" optional="hide"/>
                 </tree>
             </field>
         </record>
@@ -187,12 +191,14 @@
                         </div>
                         <group>
                             <group>
-                                <field name="contributor"/>
+                                <field name="contributor" attrs="{'invisible': [('contributor', '=', False)]}"/>
+                                <field name="contributor_name" attrs="{'invisible': [('contributor', '!=', False)]}"/>
                                 <field name="commit_date"/>
                                 <field name="html_url" readonly="1" widget="url" placeholder="Commit" string="URL"/>
                             </group>
                             <group>
-                                <field name="author"/>
+                                <field name="author" attrs="{'invisible': [('author', '=', False)]}"/>
+                                <field name="author_name" attrs="{'invisible': [('author', '!=', False)]}"/>
                                 <field name="author_date"/>
                             </group>
                         </group>

@@ -20,7 +20,6 @@ class GithubTeam(models.Model):
     organization = fields.Char(required=True)
     pr_ids = fields.One2many('pull.request', 'team')
     members = fields.Many2many('res.partner', string='Team Members')
-    from_date = fields.Datetime()
 
     def fetch_pr(self):  
         session = requests.Session()
@@ -51,7 +50,11 @@ class GithubTeam(models.Model):
                             'draft': pr.get('draft'),
                             'body': pr.get('body'),
                             'author': partner and partner[0].id,
-                            'team': team.id
+                            'author_name': pr.get('user').get('name'),
+                            'team': team.id,
+                            'comments_url': pr.get('comments_url'),
+                            'timeline_url': pr.get('timeline_url'),
+                            'html_url': pr.get('html_url')
                         }
      
                         pull_request = self.env['pull.request'].search([('git_id', '=', str(pr['id']))])
@@ -65,7 +68,9 @@ class GithubTeam(models.Model):
                                 'pr_number': pr.get('number'),
                                 'pr_create_date': create_date,
                                 })
-                            self.env['pull.request'].create(vals)
+                            pr = self.env['pull.request'].create(vals)
+                            pr.fetch_comments()
+                            pr.fetch_commits()
 
     def cron_fetch_pr(self):
         self.search([]).with_context(its_cron=True).fetch_pr()
